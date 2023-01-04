@@ -1,5 +1,11 @@
 import { OrbitControls } from "@react-three/drei";
-import { EffectComposer, Glitch, Vignette } from "@react-three/postprocessing";
+import {
+  EffectComposer,
+  Bloom,
+  Glitch,
+  Vignette,
+  Noise,
+} from "@react-three/postprocessing";
 import { BlendFunction, GlitchMode } from "postprocessing";
 import { Perf } from "r3f-perf";
 
@@ -8,7 +14,7 @@ export default function Experience() {
 
   return (
     <>
-      <color args={["#ffffff"]} attach='background' />
+      <color args={["#000000"]} attach='background' />
       {/* 'multisampling' -> to prevent aliasing effect (default : 8) */}
       <EffectComposer multisampling={8}>
         {/* <Vignette
@@ -17,12 +23,17 @@ export default function Experience() {
           blendFunction={BlendFunction.NORMAL}
         /> */}
 
-        <Glitch
+        {/* <Glitch
           delay={[1, 3]}
           duration={[0.2, 1]}
           strength={[0.2, 0.4]}
           mode={GlitchMode.CONSTANT_MILD}
-        />
+        /> */}
+
+        {/* <Noise premultiply blendFunction={BlendFunction.SOFT_LIGHT} /> */}
+
+        {/* Need to disable the toneMapping to have a color between 0 and 1 */}
+        <Bloom mipmapBlur intensity={0.8} luminanceThreshold={0.9} />
       </EffectComposer>
       <Perf position='top-left' />
 
@@ -36,9 +47,24 @@ export default function Experience() {
         <meshStandardMaterial color='orange' />
       </mesh>
 
+      <mesh castShadow position-x={0} scale={1.5}>
+        <boxGeometry />
+        <meshBasicMaterial color={[1.4 * 5, 1 * 5, 4 * 5]} />
+      </mesh>
+
       <mesh castShadow position-x={2} scale={1.5}>
         <boxGeometry />
-        <meshStandardMaterial color='mediumpurple' />
+        <meshStandardMaterial
+          toneMapped={false}
+          color='orange'
+          emissive='orange'
+          emissiveIntensity={10}
+        />
+      </mesh>
+
+      <mesh castShadow position-x={4} scale={1.5}>
+        <boxGeometry />
+        <meshStandardMaterial toneMapped={false} color={[5, 2, 1]} />
       </mesh>
 
       <mesh
